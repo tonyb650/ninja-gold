@@ -17,7 +17,8 @@ import jakarta.servlet.http.HttpSession;
 public class MainController {
 	
 	@RequestMapping("/")
-	public String index(Model model) {
+	public String index(HttpSession session) {
+		if(session.getAttribute("gold")==null) {session.setAttribute("gold", 0);}
 		return "index.jsp";
 	}
 	
@@ -44,7 +45,6 @@ public class MainController {
 		Integer change = 0;
 		if(location.equals("farm")) {
 			change = 10+rand.nextInt(11);
-//			String changeStr = ""+change;
 			activity.add(String.format("You entered a %s and earned %d gold. (%s)", location, change, formattedDate ));
 		} else if (location.equals("cave")){
 			change = 5+rand.nextInt(6);
@@ -63,6 +63,7 @@ public class MainController {
 		gold += change;
 		session.setAttribute("gold", gold);
 		session.setAttribute("activity", activity);
+		// Could add logic here: if gold < -100 return "redirect:/debtorsprison"
 		return "redirect:/";
 	}
 }
